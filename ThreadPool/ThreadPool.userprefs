@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" ctype="Workspace" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ThreadPool/Main.cs" ctype="Workbench">
+    <Files>
+      <File FileName="ThreadPool/Main.cs" Line="14" Column="1" />
+      <File FileName="ThreadPool/IThreadPool.cs" Line="3" Column="24" />
+      <File FileName="ThreadPool/nThreadPool.cs" Line="24" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches ctype="PinnedWatchStore" />
+</Properties>
