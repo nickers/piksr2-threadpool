@@ -25,7 +25,10 @@ namespace nThreadPool
 		{
 			Destroy();
 		}
-		
+
+		/**
+		 * 
+		 */
 		private void Destroy()
 		{
 			Monitor.Enter(threads);
@@ -78,6 +81,9 @@ namespace nThreadPool
 			return true;
 		}
 
+		/**
+		 *
+		 */
         public int PoolSize {  get { return poolSize; } }
 		
 		private Thread AddThread() 
