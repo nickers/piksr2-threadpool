@@ -13,6 +13,9 @@ namespace nThreadPool
 	/// </summary>
 	class MainClass
 	{
+		/// <summary>
+		/// Must be dividable by 4
+		/// </summary>
 		public static long TEST_SIZE = 10000000;
 		public static long MOD = TEST_SIZE/100;
 		
@@ -24,29 +27,35 @@ namespace nThreadPool
 			long tm=0;
 			Mono.Unix.Native.Syscall.time(out tm);
 			nThreadPool tp = new nThreadPool(3);
-			for (int i=0; i<TEST_SIZE; i++) 
+			for (int th=0; th<4; th++) 
 			{
-				tp.QueueUserWorkItem((Object o) => {
-					Monitor.Enter(MainClass.sync);
-					MainClass.cnt++;
-					if (MainClass.cnt%MOD==0)
+				Thread _th = new Thread(() => {
+					for (int i=0; i<TEST_SIZE/4; i++) 
 					{
-						IThreadPool p = (IThreadPool)o;
-						if (p.PoolSize==10)
-							p.SetPoolSize(100);
-						else
-							p.SetPoolSize(10);
+						tp.QueueUserWorkItem((Object o) => {
+							Monitor.Enter(MainClass.sync);
+							MainClass.cnt++;
+							if (MainClass.cnt%MOD==0)
+							{
+								IThreadPool p = (IThreadPool)o;
+								if (p.PoolSize==10)
+									p.SetPoolSize(100);
+								else
+									p.SetPoolSize(10);
+							}
+							if (MainClass.cnt>=TEST_SIZE)
+							{
+								long tm2=0;
+								Mono.Unix.Native.Syscall.time(out tm2);
+								Console.WriteLine("Time: " + (tm2-tm));
+							}
+							Monitor.Exit(MainClass.sync);
+						});
 					}
-					if (MainClass.cnt>=TEST_SIZE)
-					{
-						long tm2=0;
-						Mono.Unix.Native.Syscall.time(out tm2);
-						Console.WriteLine("Time: " + (tm2-tm));
-					}
-					Monitor.Exit(MainClass.sync);
 				});
-			}
-			Console.WriteLine("dodano wszystko");
+				_th.Start();
+			}		
+			Console.WriteLine("rozpoczęto dodawanie");
 
 /*
 			Thread.Sleep(5);
