@@ -6,6 +6,11 @@ using Mono.Unix.Native;
 
 namespace nThreadPool
 {
+	/// <summary>
+	/// Tomasz Wsuł
+	/// inf80169
+	/// 2nickers@gmail.com
+	/// </summary>
 	class MainClass
 	{
 		public static long TEST_SIZE = 10000000;
