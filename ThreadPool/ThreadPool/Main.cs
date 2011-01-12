@@ -42,6 +42,7 @@ namespace nThreadPool
 									p.SetPoolSize(100);
 								else
 									p.SetPoolSize(10);
+								Console.WriteLine(Thread.CurrentThread.Name);
 							}
 							if (MainClass.cnt>=TEST_SIZE)
 							{
