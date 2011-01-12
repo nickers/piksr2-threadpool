@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace nThreadPool
 {
+	/// <summary>
+	/// Magic thread pool made by most briliant programmer in th world!
+	/// </summary>
 	public class nThreadPool : IThreadPool
 	{
 		private int poolSize;
@@ -14,6 +17,12 @@ namespace nThreadPool
 		private List<Thread> threads = null;
 		private Queue<WaitCallback> jobs = null;
 
+		/// <summary>
+		/// Guess what? It is constructor!
+		/// </summary>
+		/// <param name="size">
+		/// Initial number of threads.
+		/// </param>
 		public nThreadPool (int size)
 		{
 			threads = new List<Thread>();
@@ -21,14 +30,17 @@ namespace nThreadPool
 			SetPoolSize(size);
 		}
 		
+		/// <summary>
+		/// Destructor.
+		/// </summary>
 		~nThreadPool()
 		{
 			Destroy();
 		}
 
-		/**
-		 * 
-		 */
+		/// <summary>
+		/// Waits for all threads to finish and destroys them.
+		/// </summary>
 		private void Destroy()
 		{
 			Monitor.Enter(threads);
@@ -45,22 +57,46 @@ namespace nThreadPool
 			Monitor.Exit(threads);
 		}
 		
-		
+		/// <summary>
+		/// Adds job to be executed by thread pool.
+		/// </summary>
+		/// <param name="callBack">
+		/// Job to be executed. <see cref="WaitCallback"/>
+		/// </param>
+		/// <returns>
+		/// True if succeded, False otherwise.<see cref="System.Boolean"/>
+		/// </returns>
 		public bool QueueUserWorkItem (WaitCallback callBack)
 		{
 			Monitor.Enter(jobs);
-			//jobs.Add(callBack);
 			jobs.Enqueue(callBack);
 			Monitor.Pulse(jobs);
 			Monitor.Exit(jobs);
 			return true;
 		}
 
+		
+		/// <summary>
+		/// Sets desired amount of threads in pool.
+		/// 
+		/// If current amount of threads in pool is bigger than desired one
+		/// some threads are destroyed, but not until they finish current job (if executing any).
+		/// If all threads are currently occupied first threads will be killed after they finish 
+		/// executing current job.
+		/// </summary>
+		/// <param name="size">
+		/// Desired amount of threads in pool.
+		/// </param>
+		/// <returns>
+		/// True if ok, False if failed(invalid amount of threads passed).
+		/// </returns>
         public bool SetPoolSize (int size)
 		{
-//XXX			Console.WriteLine("new_size: " + size);
+			if (size<0)
+				return false;
+
 			Monitor.Enter(threads);
-			if (threads.Count < size) 
+			if (threads.Count < size)
 			{
 				for (int i=threads.Count; i<size; i++) 
 				{
@@ -81,11 +117,20 @@ namespace nThreadPool
 			return true;
 		}
 
-		/**
-		 *
-		 */
+		/// <summary>
+		/// Returns desired thread pool size.
+		/// 
+		/// Actual number of threads may by bigger for some time, if size was just
+		/// decreased and not all unneeded threads were killed.
+		/// </summary>
         public int PoolSize {  get { return poolSize; } }
 		
+		/// <summary>
+		/// Creates new background thread, adds it to pool and returns it.
+		/// </summary>
+		/// <returns>
+		/// Worker thread already added to pool. <see cref="Thread"/>
+		/// </returns>
 		private Thread AddThread() 
 		{
 			Thread th = new Thread(() => {
@@ -98,7 +143,6 @@ namespace nThreadPool
 						
 						if (threadsToDestroy > 0) 
 						{
-///							Console.WriteLine("Exit: " + Thread.CurrentThread.Name);
 							threadsToDestroy--;
 							Monitor.Exit(jobs);
 							Monitor.Enter(threads);
@@ -111,18 +155,19 @@ namespace nThreadPool
 							Monitor.Exit(threads);
 							Monitor.Enter(jobs);
 						}
+						
 						if (jobs.Count>0)
 						{
-							//c = jobs[0];
-							//jobs.RemoveAt(0);
 							c = jobs.Dequeue();
 							Monitor.Pulse(jobs);
 							Monitor.Exit(jobs);
 							c.Invoke(this);
 						}
 					} catch (ThreadInterruptedException) {
+						// it is ok, we know what we need to do
 						return;
 					} catch (ThreadAbortException) {
+						// the same as above
 						return;
 					} catch (Exception e) {
 						Console.Error.WriteLine(e.ToString());
