@@ -1,11 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ThreadPool/nThreadPool.cs" ctype="Workbench">
-    <Files>
-      <File FileName="ThreadPool/Main.cs" Line="163" Column="6" />
-      <File FileName="ThreadPool/nThreadPool.cs" Line="61" Column="48" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ctype="Workbench" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
