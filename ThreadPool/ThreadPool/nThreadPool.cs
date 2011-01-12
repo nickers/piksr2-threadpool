@@ -7,6 +7,10 @@ namespace nThreadPool
 {
 	/// <summary>
 	/// Magic thread pool made by most briliant programmer in th world!
+	/// 
+	/// Tomasz Wsuł
+	/// inf80169
+	/// 2nickers@gmail.com
 	/// </summary>
 	public class nThreadPool : IThreadPool
 	{
